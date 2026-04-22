@@ -472,22 +472,50 @@ function hideLoading() {
   document.getElementById('loadingOverlay').style.display = 'none';
 }
 
-// ===== API =====
-async function apiGet() {
-  const res = await fetch(API_URL + '?action=getAll');
-  return await res.json();
+// ===== JSONP 통신 =====
+let _cbIndex = 0;
+function jsonp(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = '_cb' + (++_cbIndex);
+    const url = API_URL + '?' + Object.entries({...params, callback: cbName})
+      .map(([k,v]) => k + '=' + encodeURIComponent(typeof v === 'object' ? JSON.stringify(v) : v))
+      .join('&');
+    const script = document.createElement('script');
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('요청 시간 초과'));
+    }, 15000);
+    window[cbName] = (data) => { cleanup(); resolve(data); };
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+    script.onerror = () => { cleanup(); reject(new Error('네트워크 오류')); };
+    script.src = url;
+    document.head.appendChild(script);
+  });
 }
-async function apiPost(body) {
-  const res = await fetch(API_URL, { method:'POST', body: JSON.stringify(body) });
-  return await res.json();
+
+async function apiCall(params) {
+  return await jsonp(params);
 }
+
 async function loadTrades() {
   showLoading('데이터 불러오는 중...');
   try {
-    const data = await apiGet();
-    trades = Array.isArray(data) ? data.map(t=>({...t, price:Number(t.price), qty:Number(t.qty), id:Number(t.id)})) : [];
+    const data = await apiCall({ action: 'getAll' });
+    trades = Array.isArray(data) ? data.map(t => ({
+      ...t,
+      price: Number(t.price),
+      qty: Number(t.qty),
+      id: Number(t.id),
+      date: String(t.date).substring(0, 10)
+    })) : [];
     updateAll();
-  } catch(e) { alert('데이터 로드 실패: ' + e.message); }
+  } catch(e) {
+    alert('데이터 로드 실패: ' + e.message);
+  }
   hideLoading();
 }
 
@@ -511,7 +539,8 @@ function updateClock() { document.getElementById('nowTime').textContent = new Da
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('buy-date').value = todayStr();
   document.getElementById('sell-date').value = todayStr();
-  setInterval(updateClock, 1000); updateClock();
+  setInterval(updateClock, 1000);
+  updateClock();
   loadTrades();
 });
 
@@ -525,7 +554,7 @@ async function addBuy() {
   const trade = {id:nextId(), date, stock, type:'buy', price, qty};
   showLoading('저장 중...');
   try {
-    await apiPost({action:'add', trade});
+    await apiCall({ action:'add', trade });
     trades.push(trade);
     updateAll();
     document.getElementById('buy-stock').value='';
@@ -546,7 +575,7 @@ async function addSell() {
   const trade = {id:nextId(), date, stock, type:'sell', price, qty};
   showLoading('저장 중...');
   try {
-    await apiPost({action:'add', trade});
+    await apiCall({ action:'add', trade });
     trades.push(trade);
     updateAll();
     document.getElementById('sell-stock').value='';
@@ -585,17 +614,14 @@ function computeFIFO() {
   return {realized, buyQueues};
 }
 
-// ===== DATE GROUPS =====
 function groupByDate() {
   const {realized} = computeFIFO();
   const dates = [...new Set(trades.map(t=>t.date))].sort((a,b)=>b.localeCompare(a));
   return dates.map(date=>({date, trades:trades.filter(t=>t.date===date), realized:realized[date]||[]}));
 }
 
-// ===== UPDATE ALL =====
 function updateAll() { renderToday(); renderHistory(); renderHolding(); renderStats(); }
 
-// ===== TODAY =====
 function renderToday() {
   const today = todayStr();
   const {realized} = computeFIFO();
@@ -614,13 +640,12 @@ function renderToday() {
   </tr>`).join('');
   el.innerHTML = `<div style="margin-bottom:14px;font-size:.88rem;color:var(--muted)">
     오늘 실현 수익 합계: <strong style="color:${totalPnl>=0?'var(--green)':'var(--red)'};font-size:1.1rem">
-      ${totalPnl>=0?'+':''}${Math.round(totalPnl).toLocaleString()}원</strong></div>
+    ${totalPnl>=0?'+':''}${Math.round(totalPnl).toLocaleString()}원</strong></div>
     <div class="table-wrap" style="border-radius:10px;border:1px solid var(--border)">
     <table><thead><tr><th>종목</th><th>매수일</th><th>매수가</th><th>매도가</th><th>수량</th><th>수익금</th><th>수익률</th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
 }
 
-// ===== HISTORY =====
 function renderHistory() {
   const groups = groupByDate();
   const el = document.getElementById('historyContainer');
@@ -670,7 +695,6 @@ function renderHistory() {
   }).join('');
 }
 
-// ===== HOLDING =====
 function renderHolding() {
   const {buyQueues} = computeFIFO();
   const list = [];
@@ -697,7 +721,6 @@ function renderHolding() {
       <tbody>${rows}</tbody></table></div></div>`;
 }
 
-// ===== STATS =====
 function renderStats() {
   const groups = groupByDate();
   let totalPnl=0, tradeCount=0, profitDays=0, lossDays=0;
@@ -729,7 +752,7 @@ function closeResetModal() { document.getElementById('resetModal').classList.rem
 async function confirmReset() {
   showLoading('전체 삭제 중...');
   try {
-    await apiPost({action:'reset'});
+    await apiCall({ action:'reset' });
     trades = [];
     updateAll();
   } catch(e) { alert('삭제 실패: '+e.message); }
@@ -744,7 +767,7 @@ async function confirmDelete() {
   if(!deleteTarget) return;
   showLoading('삭제 중...');
   try {
-    await apiPost({action:'delete', id:deleteTarget});
+    await apiCall({ action:'delete', id:deleteTarget });
     trades = trades.filter(t=>t.id!==deleteTarget);
     updateAll();
   } catch(e) { alert('삭제 실패: '+e.message); }
@@ -776,7 +799,7 @@ async function confirmEdit() {
   const updated = {id:editTarget, date, stock, type, price, qty};
   showLoading('수정 중...');
   try {
-    await apiPost({action:'update', trade:updated});
+    await apiCall({ action:'update', trade:updated });
     const idx = trades.findIndex(t=>t.id===editTarget);
     if(idx!==-1) trades[idx] = updated;
     updateAll();
@@ -795,6 +818,7 @@ function exportCSV() {
   a.download = '주식거래내역_'+todayStr()+'.csv';
   a.click();
 }
+
 async function importCSV(e) {
   const file = e.target.files[0]; if(!file) return;
   const reader = new FileReader();
@@ -806,11 +830,13 @@ async function importCSV(e) {
       const cols = lines[i].split(',').map(c=>c.trim().replace(/"/g,''));
       if(cols.length<5) continue;
       const [date,stock,typeStr,price,qty] = cols;
-      newTrades.push({id:nextId()+newTrades.length, date, stock, type:typeStr.includes('매도')?'sell':'buy', price:parseFloat(price)||0, qty:parseInt(qty)||0});
+      newTrades.push({id:nextId()+newTrades.length, date, stock,
+        type:typeStr.includes('매도')?'sell':'buy',
+        price:parseFloat(price)||0, qty:parseInt(qty)||0});
     }
     showLoading(`${newTrades.length}건 저장 중...`);
     try {
-      for(const t of newTrades){ await apiPost({action:'add',trade:t}); trades.push(t); }
+      for(const t of newTrades){ await apiCall({action:'add', trade:t}); trades.push(t); }
       updateAll();
       alert(`✅ ${newTrades.length}건 가져오기 완료!`);
     } catch(err){ alert('가져오기 실패: '+err.message); }
