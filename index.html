@@ -7,31 +7,31 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1117;
-    --bg2: #161b27;
-    --card: #1c2333;
-    --border: #2a3650;
-    --blue: #4a9eff;
-    --green: #22c55e;
-    --red: #ef4444;
-    --gold: #f59e0b;
-    --text: #e2e8f0;
+    --bg: #f0f4ff;
+    --bg2: #e4eaf8;
+    --card: #ffffff;
+    --border: #c8d3ee;
+    --blue: #3b82f6;
+    --green: #16a34a;
+    --red: #dc2626;
+    --gold: #d97706;
+    --text: #1e293b;
     --muted: #64748b;
-    --input-bg: #111827;
+    --input-bg: #f8faff;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
   /* HEADER */
   .header {
-    background: linear-gradient(90deg, #0f1117 0%, #1a2540 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
     border-bottom: 2px solid var(--blue);
     padding: 16px 28px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .header h1 { font-size: 1.3rem; font-weight: 900; }
-  .header h1 span { color: var(--blue); }
-  .header-date { font-size: 0.8rem; color: var(--muted); }
+  .header h1 { font-size: 1.3rem; font-weight: 900; color: #fff; }
+  .header h1 span { color: #bfdbfe; }
+  .header-date { font-size: 0.8rem; color: rgba(255,255,255,.8); }
 
   /* TABS */
   .tabs {
@@ -44,7 +44,7 @@
     cursor: pointer; transition: all .2s; margin-bottom: -1px;
     white-space: nowrap;
   }
-  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 700; }
   .tab:hover:not(.active) { color: var(--text); }
 
   .main { padding: 24px 28px; max-width: 1100px; margin: 0 auto; }
@@ -84,7 +84,7 @@
   .btn-buy { background: var(--red); color: #fff; }
   .btn-sell { background: var(--blue); color: #fff; }
   .btn-add { background: var(--green); color: #fff; }
-  .btn-danger { background: #3a1a1a; color: var(--red); border: 1px solid var(--red); }
+  .btn-danger { background: #fee2e2; color: var(--red); border: 1px solid var(--red); }
 
   /* SUMMARY CARDS */
   .summary-row {
@@ -106,12 +106,12 @@
   /* DATE GROUP */
   .date-group { margin-bottom: 28px; }
   .date-header {
-    background: linear-gradient(90deg, #1a2540, var(--card));
+    background: linear-gradient(90deg, #eef2ff, #ffffff);
     border: 1px solid var(--border); border-radius: 10px 10px 0 0;
     padding: 12px 18px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .date-title { font-size: 1rem; font-weight: 800; color: var(--blue); }
+  .date-title { font-size: 1rem; font-weight: 800; color: #2563eb; }
   .date-summary { font-size: 0.82rem; display: flex; gap: 18px; }
   .date-pnl { font-weight: 700; }
   .date-pnl.pos { color: var(--green); }
@@ -120,31 +120,31 @@
   /* TABLE */
   .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
   table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
-  thead tr { background: #0d1525; }
+  thead tr { background: #eef2ff; }
   thead th {
     padding: 10px 14px; text-align: center;
-    color: var(--muted); font-weight: 700; font-size: 0.76rem;
+    color: #4b5e8a; font-weight: 700; font-size: 0.76rem;
     white-space: nowrap;
   }
   tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
   tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: rgba(74,158,255,.04); }
+  tbody tr:hover { background: rgba(59,130,246,.06); }
   tbody td { padding: 10px 14px; text-align: center; white-space: nowrap; }
   .td-stock { font-weight: 700; text-align: left; }
   .td-type { padding: 3px 10px; border-radius: 12px; font-size: 0.73rem; font-weight: 700; }
-  .td-type.buy { background: #3a1010; color: var(--red); }
-  .td-type.sell { background: #0f2a3a; color: var(--blue); }
-  .td-type.matched { background: #0f2a1a; color: var(--green); }
+  .td-type.buy { background: #fee2e2; color: var(--red); }
+  .td-type.sell { background: #dbeafe; color: var(--blue); }
+  .td-type.matched { background: #dcfce7; color: var(--green); }
   .pnl-pos { color: var(--green); font-weight: 700; }
   .pnl-neg { color: var(--red); font-weight: 700; }
   .pnl-zero { color: var(--muted); }
-  .tfoot-row td { background: #0d1525; font-weight: 800; color: var(--text); padding: 12px 14px; }
+  .tfoot-row td { background: #eef2ff; font-weight: 800; color: var(--text); padding: 12px 14px; }
 
   /* HOLDING TABLE */
   .holding-badge {
     display: inline-block; padding: 3px 10px; border-radius: 12px;
     font-size: 0.73rem; font-weight: 700;
-    background: #2a1a00; color: var(--gold); border: 1px solid #6a4a00;
+    background: #fef3c7; color: #92400e; border: 1px solid #fbbf24;
   }
 
   /* EMPTY STATE */
@@ -177,17 +177,17 @@
   .modal h3 { font-size: 1rem; font-weight: 800; margin-bottom: 18px; }
   .modal-btns { display: flex; gap: 10px; margin-top: 18px; }
   .modal-btns .btn { flex: 1; }
-  .btn-cancel { background: var(--border); color: var(--text); }
+  .btn-cancel { background: #e2e8f0; color: var(--text); }
 
   /* RESET BUTTON */
   .reset-btn {
     display: flex; align-items: center; gap: 8px;
     padding: 8px 18px; border-radius: 8px; font-size: 0.82rem;
     font-weight: 700; cursor: pointer; font-family: inherit;
-    background: transparent; border: 1.5px solid var(--red);
-    color: var(--red); transition: all .2s;
+    background: transparent; border: 1.5px solid rgba(255,255,255,.7);
+    color: #fff; transition: all .2s;
   }
-  .reset-btn:hover { background: rgba(239,68,68,.1); }
+  .reset-btn:hover { background: rgba(255,255,255,.15); }
   .reset-modal-body { font-size:.88rem; color:var(--muted); line-height:1.7; margin-bottom:4px; }
   .reset-modal-body strong { color: var(--red); }
 
@@ -669,7 +669,7 @@ function renderHistory() {
         </div></td></tr>`;
     }).join('');
     const realizedRows = g.realized.map(m=>`
-      <tr style="background:rgba(34,197,94,.04)">
+      <tr style="background:rgba(22,163,74,.06)">
         <td class="td-stock" style="color:var(--green)">↳ ${m.stock} 실현</td>
         <td><span class="td-type matched">수익확정</span></td>
         <td style="color:var(--muted);font-size:.78rem">매수일: ${m.buyDate} / ${m.buyPrice.toLocaleString()}원</td>
@@ -723,27 +723,100 @@ function renderHolding() {
 
 function renderStats() {
   const groups = groupByDate();
+  const {realized} = computeFIFO();
   let totalPnl=0, tradeCount=0, profitDays=0, lossDays=0;
+
+  // 날짜별 수익 합산
+  const datePnlMap = {};
   const statsRows = groups.map(g=>{
     const pnl = g.realized.reduce((s,m)=>s+m.pnl,0);
     totalPnl+=pnl; tradeCount+=g.trades.length;
-    if(g.realized.length>0){ if(pnl>0)profitDays++; else if(pnl<0)lossDays++; }
+    if(g.realized.length>0){
+      datePnlMap[g.date] = pnl;
+      if(pnl>0)profitDays++; else if(pnl<0)lossDays++;
+    }
     return `<tr><td>${g.date}</td><td>${g.trades.filter(t=>t.type==='buy').length}</td>
       <td>${g.trades.filter(t=>t.type==='sell').length}</td><td>${g.realized.length}</td>
       <td>${g.realized.length>0?fmtPnl(Math.round(pnl)):'<span style="color:var(--muted)">-</span>'}</td></tr>`;
   }).join('');
+
   document.getElementById('stat-total-pnl').textContent=(totalPnl>=0?'+':'')+Math.round(totalPnl).toLocaleString()+'원';
   document.getElementById('stat-total-pnl').className='summary-value '+(totalPnl>=0?'green':'red');
   document.getElementById('stat-trades').textContent=tradeCount+'건';
   document.getElementById('stat-profit-days').textContent=profitDays+'일';
   document.getElementById('stat-loss-days').textContent=lossDays+'일';
+
   const el = document.getElementById('statsContainer');
   if(groups.length===0){ el.innerHTML='<div class="empty"><div class="icon">📊</div>데이터가 없습니다</div>'; return; }
-  el.innerHTML=`<div class="form-card" style="margin-bottom:0">
-    <div class="form-title">📅 날짜별 수익 현황</div>
-    <div class="table-wrap" style="border-radius:10px"><table>
-      <thead><tr><th>날짜</th><th>매수</th><th>매도</th><th>실현건수</th><th>실현 수익</th></tr></thead>
-      <tbody>${statsRows}</tbody></table></div></div>`;
+
+  // ===== 종목별 수익금 합산 =====
+  const stockPnlMap = {};
+  for(const dateArr of Object.values(realized)) {
+    for(const m of dateArr) {
+      if(!stockPnlMap[m.stock]) stockPnlMap[m.stock] = {pnl:0, cnt:0};
+      stockPnlMap[m.stock].pnl += m.pnl;
+      stockPnlMap[m.stock].cnt++;
+    }
+  }
+  const top3Stocks = Object.entries(stockPnlMap)
+    .sort((a,b)=>b[1].pnl-a[1].pnl).slice(0,3);
+
+  // ===== 날짜별 수익 TOP3 =====
+  const top3Dates = Object.entries(datePnlMap)
+    .sort((a,b)=>b[1]-a[1]).slice(0,3);
+
+  const medalColor = ['var(--gold)','var(--silver)','var(--bronze,#cd7f32)'];
+  const medalEmoji = ['🥇','🥈','🥉'];
+
+  const stockCards = top3Stocks.length===0
+    ? '<div style="color:var(--muted);font-size:.85rem;padding:12px">데이터 없음</div>'
+    : top3Stocks.map(([stock,v],i)=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;
+        padding:14px 18px;background:#eef2ff;border-radius:10px;
+        border-left:4px solid ${medalColor[i]};margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:1.4rem">${medalEmoji[i]}</span>
+          <div>
+            <div style="font-weight:800;font-size:1rem">${stock}</div>
+            <div style="font-size:.75rem;color:var(--muted)">${v.cnt}회 거래</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:900;font-size:1.1rem;color:${v.pnl>=0?'var(--green)':'var(--red)'}">${v.pnl>=0?'+':''}${Math.round(v.pnl).toLocaleString()}원</div>
+        </div>
+      </div>`).join('');
+
+  const dateCards = top3Dates.length===0
+    ? '<div style="color:var(--muted);font-size:.85rem;padding:12px">데이터 없음</div>'
+    : top3Dates.map(([date,pnl],i)=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;
+        padding:14px 18px;background:#eef2ff;border-radius:10px;
+        border-left:4px solid ${medalColor[i]};margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:1.4rem">${medalEmoji[i]}</span>
+          <div style="font-weight:800;font-size:1rem">📅 ${date}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:900;font-size:1.1rem;color:${pnl>=0?'var(--green)':'var(--red)'}">${pnl>=0?'+':''}${Math.round(pnl).toLocaleString()}원</div>
+        </div>
+      </div>`).join('');
+
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+      <div class="form-card" style="margin-bottom:0">
+        <div class="form-title">🏆 수익금 상위 종목 TOP 3</div>
+        ${stockCards}
+      </div>
+      <div class="form-card" style="margin-bottom:0">
+        <div class="form-title">📅 실현 수익 상위 날짜 TOP 3</div>
+        ${dateCards}
+      </div>
+    </div>
+    <div class="form-card" style="margin-bottom:0">
+      <div class="form-title">📋 날짜별 수익 현황</div>
+      <div class="table-wrap" style="border-radius:10px"><table>
+        <thead><tr><th>날짜</th><th>매수</th><th>매도</th><th>실현건수</th><th>실현 수익</th></tr></thead>
+        <tbody>${statsRows}</tbody></table></div></div>`;
 }
 
 // ===== RESET =====
